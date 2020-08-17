@@ -34,7 +34,7 @@ extension AWSClient {
     ///   - onPage: closure called with each block of entries
     public func paginate<Input: AWSPaginateToken, Output: AWSShape>(
         input: Input,
-        command: @escaping (Input) -> EventLoopFuture<Output>,
+        command: @escaping (Input, AWSServiceContext) -> EventLoopFuture<Output>,
         tokenKey: KeyPath<Output, Input.Token?>,
         context: AWSServiceContext,
         onPage: @escaping (Output, EventLoop) -> EventLoopFuture<Bool>
@@ -43,7 +43,7 @@ extension AWSClient {
         let promise = eventLoop.makePromise(of: Void.self)
 
         func paginatePart(input: Input) {
-            let responseFuture = command(input)
+            let responseFuture = command(input, context)
                 .flatMap { response in
                     return onPage(response, eventLoop)
                         .map { (rt) -> Void in

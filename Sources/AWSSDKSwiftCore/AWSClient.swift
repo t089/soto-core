@@ -259,7 +259,7 @@ extension AWSClient {
                 )
             },
             execute: { request, eventLoop, logger in
-                return self.httpClient.execute(request: request, timeout: context.timeout, on: eventLoop, logger: logger)
+                return self.httpClient.execute(request: request, timeout: config.timeout, on: eventLoop, logger: logger)
             },
             processResponse: { response in
                 return
@@ -296,7 +296,7 @@ extension AWSClient {
                 )
             },
             execute: { request, eventLoop, logger in
-                return self.httpClient.execute(request: request, timeout: context.timeout, on: eventLoop, logger: logger)
+                return self.httpClient.execute(request: request, timeout: config.timeout, on: eventLoop, logger: logger)
             },
             processResponse: { response in
                 return
@@ -333,7 +333,7 @@ extension AWSClient {
                 )
             },
             execute: { request, eventLoop, logger in
-                return self.httpClient.execute(request: request, timeout: context.timeout, on: eventLoop, logger: logger)
+                return self.httpClient.execute(request: request, timeout: config.timeout, on: eventLoop, logger: logger)
             },
             processResponse: { response in
                 return try self.validate(operation: operationName, response: response, config: config)
@@ -373,7 +373,7 @@ extension AWSClient {
                 )
             },
             execute: { request, eventLoop, logger in
-                return self.httpClient.execute(request: request, timeout: context.timeout, on: eventLoop, logger: logger)
+                return self.httpClient.execute(request: request, timeout: config.timeout, on: eventLoop, logger: logger)
             },
             processResponse: { response in
                 return try self.validate(operation: operationName, response: response, config: config)
@@ -414,7 +414,7 @@ extension AWSClient {
                 )
             },
             execute: { request, eventLoop, logger in
-                return self.httpClient.execute(request: request, timeout: context.timeout, on: eventLoop, logger: logger, stream: stream)
+                return self.httpClient.execute(request: request, timeout: config.timeout, on: eventLoop, logger: logger, stream: stream)
             },
             processResponse: { response in
                 return try self.validate(operation: operationName, response: response, config: config)

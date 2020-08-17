@@ -38,24 +38,18 @@ class AWSServiceTests: XCTestCase {
         XCTAssertEqual(service.endpoint, endpoint)
     }
 
-    func testDelegatingToEventloop() {
+/*    func testDelegatingToEventloop() {
         let service = TestService(client: client, config: createServiceConfig(), context: .init())
         let eventLoop = service.eventLoopGroup.next()
         XCTAssertNil(service.context.eventLoop)
         XCTAssertTrue(service.delegating(to: eventLoop).context.eventLoop === eventLoop)
     }
 
-    func testTimeout() {
-        let service = TestService(client: client, config: createServiceConfig(), context: .init(timeout: .seconds(23)))
-        XCTAssertEqual(service.context.timeout, .seconds(23))
-        XCTAssertEqual(service.timingOut(after: .seconds(34)).context.timeout, .seconds(34))
-    }
-
     func testLogger() {
         let service = TestService(client: client, config: createServiceConfig(), context: .init())
         XCTAssertEqual(service.context.logger.label, AWSClient.loggingDisabled.label)
         XCTAssertEqual(service.logging(to: Logger(label: "TestLogger")).context.logger.label, "TestLogger")
-    }
+    }*/
 }
 
 struct TestService: AWSService {
@@ -63,7 +57,7 @@ struct TestService: AWSService {
     var config: AWSServiceConfig
     var context: AWSServiceContext
 
-    func withNewContext(_ process: (AWSServiceContext) -> AWSServiceContext) -> Self {
+    /*func withNewContext(_ process: (AWSServiceContext) -> AWSServiceContext) -> Self {
         return Self(client: self.client, config: self.config, context: process(self.context))
-    }
+    }*/
 }

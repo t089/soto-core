@@ -34,6 +34,8 @@ public class AWSServiceConfig {
     public let possibleErrorTypes: [AWSErrorType.Type]
     /// Middleware code specific to the service used to edit requests before they sent and responses before they are decoded
     public let middlewares: [AWSServiceMiddleware]
+    /// Timeout value for HTTP requests
+    public var timeout: TimeAmount
 
     /// Create a ServiceConfig object
     ///
@@ -50,6 +52,7 @@ public class AWSServiceConfig {
     ///   - partitionEndpoints: Default endpoint to use, if no region endpoint is supplied
     ///   - possibleErrorTypes: Array of possible error types that the client can throw
     ///   - middlewares: Array of middlewares to apply to requests and responses
+    ///   - timeout: Time out value for HTTP requests. NB this is a timeout for the whole request not just connection
     public init(
         region: Region?,
         partition: AWSPartition,
@@ -62,7 +65,8 @@ public class AWSServiceConfig {
         serviceEndpoints: [String: String] = [:],
         partitionEndpoints: [AWSPartition: (endpoint: String, region: Region)] = [:],
         possibleErrorTypes: [AWSErrorType.Type] = [],
-        middlewares: [AWSServiceMiddleware] = []
+        middlewares: [AWSServiceMiddleware] = [],
+        timeout: TimeAmount = .seconds(20)
     ) {
         var partition = partition
         if let region = region {
@@ -83,6 +87,7 @@ public class AWSServiceConfig {
         self.serviceProtocol = serviceProtocol
         self.possibleErrorTypes = possibleErrorTypes
         self.middlewares = middlewares
+        self.timeout = timeout
 
         // work out endpoint, if provided use that otherwise
         if let endpoint = endpoint {

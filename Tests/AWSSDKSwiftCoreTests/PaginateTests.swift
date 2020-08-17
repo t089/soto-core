@@ -111,7 +111,7 @@ class PaginateTests: XCTestCase {
         var finalArray: [String] = []
         let service = PaginateTestService(client: client, config: config)
         let input = PaginateTestService.StringListInput(inputToken: nil, pageSize: 5)
-        let future = service.stringListPaginator(input) { result, eventloop in
+        let future = service.stringListPaginator(input, context: .init()) { result, eventloop in
             // collate results into array
             finalArray.append(contentsOf: result.array)
             return eventloop.makeSucceededFuture(true)
@@ -183,7 +183,7 @@ class PaginateTests: XCTestCase {
         let clientEventLoop = self.client.eventLoopGroup.next()
         let service = PaginateTestService(client: client, config: config)
         let input = PaginateTestService.StringListInput(inputToken: nil, pageSize: 5)
-        let future = service.delegating(to: clientEventLoop).stringListPaginator(input) { _, eventloop in
+        let future = service.stringListPaginator(input, context: .init(eventLoop: clientEventLoop)) { _, eventloop in
             XCTAssertTrue(clientEventLoop.inEventLoop)
             XCTAssertTrue(clientEventLoop === eventloop)
             return eventloop.makeSucceededFuture(true)
@@ -212,14 +212,14 @@ struct PaginateTestService: AWSService {
         self.context = context
     }
 
-    func counter(_ input: CounterInput) -> EventLoopFuture<CounterOutput> {
+    func counter(_ input: CounterInput, context: AWSServiceContext) -> EventLoopFuture<CounterOutput> {
         return self.client.execute(
             operation: "TestOperation",
             path: "/",
             httpMethod: .POST,
             input: input,
             config: self.config,
-            context: self.context
+            context: context
         )
     }
 
@@ -233,23 +233,23 @@ struct PaginateTestService: AWSService {
         )
     }
 
-    func stringList(_ input: StringListInput) -> EventLoopFuture<StringListOutput> {
+    func stringList(_ input: StringListInput, context: AWSServiceContext) -> EventLoopFuture<StringListOutput> {
         return self.client.execute(
             operation: "TestOperation",
             path: "/",
             httpMethod: .POST,
             input: input,
             config: self.config,
-            context: self.context
+            context: context
         )
     }
 
-    func stringListPaginator(_ input: StringListInput, onPage: @escaping (StringListOutput, EventLoop) -> EventLoopFuture<Bool>) -> EventLoopFuture<Void> {
+    func stringListPaginator(_ input: StringListInput, context: AWSServiceContext = TestEnvironment.context, onPage: @escaping (StringListOutput, EventLoop) -> EventLoopFuture<Bool>) -> EventLoopFuture<Void> {
         return self.client.paginate(
             input: input,
             command: self.stringList,
             tokenKey: \StringListOutput.outputToken,
-            context: self.context,
+            context: context,
             onPage: onPage
         )
     }
