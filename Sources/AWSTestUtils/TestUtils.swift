@@ -59,8 +59,7 @@ public func createServiceConfig(
     serviceEndpoints: [String: String] = [:],
     partitionEndpoints: [AWSPartition: (endpoint: String, region: Region)] = [:],
     possibleErrorTypes: [AWSErrorType.Type] = [],
-    middlewares: [AWSServiceMiddleware] = [],
-    timeout: TimeAmount? = nil
+    middlewares: [AWSServiceMiddleware] = []
 ) -> AWSServiceConfig {
     AWSServiceConfig(
         region: region,
@@ -74,8 +73,7 @@ public func createServiceConfig(
         serviceEndpoints: serviceEndpoints,
         partitionEndpoints: partitionEndpoints,
         possibleErrorTypes: possibleErrorTypes,
-        middlewares: middlewares,
-        timeout: timeout
+        middlewares: middlewares
     )
 }
 
@@ -102,6 +100,8 @@ public struct TestEnvironment {
     public static var middlewares: [AWSServiceMiddleware] {
         return (Environment["AWS_ENABLE_LOGGING"] == "true") ? [AWSLoggingMiddleware()] : []
     }
+
+    public static var context: AWSServiceContext { .init(logger: logger) }
 
     public static var logger: Logger = {
         if let loggingLevel = Environment["AWS_LOG_LEVEL"] {
