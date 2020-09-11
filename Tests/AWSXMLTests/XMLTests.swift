@@ -79,6 +79,11 @@ class XMLTests: XCTestCase {
         XCTAssertEqual(document.xmlString, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
     }
 
+    func testUTF8DecodeEncode() {
+        let xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>éiøo©å😃</test>"
+        XCTAssertNoThrow(try self.testDecodeEncode(xml: xml))
+    }
+
     func testAttributesDecodeEncode() {
         let xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><test name=\"test\">testing</test>"
         XCTAssertNoThrow(try self.testDecodeEncode(xml: xml))

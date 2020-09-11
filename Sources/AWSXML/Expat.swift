@@ -60,11 +60,10 @@ class Expat {
     }
 
     /// feed the parser
-    func feedRaw(_ cs: UnsafePointer<CChar>, final: Bool = false) throws -> Result {
-        let cslen = strlen(cs) // cs? checks for a NULL C string
+    func feedRaw(_ cs: UnsafePointer<CChar>, count: Int, final: Bool = false) throws -> Result {
         let isFinal: Int32 = final ? 1 : 0
 
-        let status: XML_Status = AWS_XML_Parse(parser, cs, Int32(cslen), isFinal)
+        let status: XML_Status = AWS_XML_Parse(parser, cs, Int32(count), isFinal)
 
         switch status { // the Expat enum's don't work?
         case XML_STATUS_OK: return .ok
@@ -80,7 +79,7 @@ class Expat {
 
     func feed(_ s: String, final: Bool = false) throws -> Result {
         return try s.withCString { cs -> Result in
-            return try self.feedRaw(cs, final: final)
+            return try self.feedRaw(cs, count: s.utf8.count, final: final)
         }
     }
 
